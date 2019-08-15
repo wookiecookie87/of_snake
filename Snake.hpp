@@ -35,6 +35,9 @@ public:
         scale = 20;
         total = 0;
         gotLonger = false;
+        
+        ofVec2f vec(0, 0);
+        tail.push_back(vec);
     }
     
     void direction(int x, int y){
@@ -57,9 +60,9 @@ public:
             if(gotLonger){
                 tail.push_back(vec);
                 gotLonger = false;
-            }else {
-                tail[total-1] = vec;
             }
+            tail[total-1] = vec;
+            
         }
             
         x += xSpeed * scale;
