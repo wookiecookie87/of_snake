@@ -32,7 +32,7 @@ void ofApp::keyPressed(int key){
     }else if(key == OF_KEY_UP){
         snake.direction(0, -1);
     }else if(key == OF_KEY_DOWN){
-        snake.direction(0, 1);
+        snake.direction(0, 1); 
     }
 }
 

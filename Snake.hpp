@@ -48,6 +48,7 @@ public:
     void getLonger(){
         total += 1;
         gotLonger = true;
+		cout << "GOT LONGER!!! " << total << endl;
     }
     
     void update() {
@@ -56,14 +57,23 @@ public:
         }
         
         ofVec2f vec(x, y);
-        if(total > 0) {
-            if(gotLonger){
-                tail.push_back(vec);
-                gotLonger = false;
-            }
-            tail[total-1] = vec;
-            
-        }
+		if (total > 0) {
+			if (gotLonger) {
+				//tail.pop_back();
+				tail.push_back(vec);
+				cout << "got longer  " << vec << "  " << tail.size() << endl;
+				cout << "got longer last index " << tail[tail.size() - 1] << "  " << endl;
+				gotLonger = false;
+			}
+			tail[total - 1] = vec;
+			cout << "added last index  " << tail[total - 1] << endl;
+		}
+		for (int i = 0; i <= total; i++) {
+			cout << "from update  " << total << "  " << i << "  " << tail[i].x << "  " << tail[i].y << endl;
+			//tail[i] = tail[i + 1];
+		}
+
+		cout << endl;
             
         x += xSpeed * scale;
         y += ySpeed * scale;
