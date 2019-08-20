@@ -11,6 +11,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     snake.update();
+	snake.die();
 }
 
 //--------------------------------------------------------------
@@ -25,15 +26,21 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if(key == OF_KEY_LEFT){
-        snake.direction(-1, 0);
-    }else if(key == OF_KEY_RIGHT){
-        snake.direction(1, 0);
-    }else if(key == OF_KEY_UP){
-        snake.direction(0, -1);
-    }else if(key == OF_KEY_DOWN){
-        snake.direction(0, 1); 
-    }
+	if (snake.getCurrentKey() != key % 2) {
+		snake.setCurrentKey(key);
+		if (key == OF_KEY_LEFT) {//57356
+			snake.direction(-1, 0);
+		}
+		else if (key == OF_KEY_RIGHT) {//57358
+			snake.direction(1, 0);
+		}
+		else if (key == OF_KEY_UP) {//57357
+			snake.direction(0, -1);
+		}
+		else if (key == OF_KEY_DOWN) {//57359
+			snake.direction(0, 1);
+		}
+	}
 }
 
 //--------------------------------------------------------------

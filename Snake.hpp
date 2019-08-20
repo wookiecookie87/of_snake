@@ -9,37 +9,54 @@
 #include "ofMath.h"
 #include "Food.hpp"
 
-class Snake{
+class Snake {
 private:
-    int x;
-    int y;
-    int xSpeed;
-    int ySpeed;
-    int scale;
-    int total;
-    bool gotLonger;
-    std::vector<ofVec2f> tail;
-    
-    
-    int width = ofGetWidth();
-    int height = ofGetHeight();
-    
+	int x;
+	int y;
+	int xSpeed;
+	int ySpeed;
+	int scale;
+	int total;
+	bool gotLonger;
+	int currentKey;
+	std::vector<ofVec2f> tail;
+
+
+	int width = ofGetWidth();
+	int height = ofGetHeight();
+
 public:
-    
-    
-    Snake(){
-        x = 0;
-        y = 0;
-        xSpeed = 1;
-        ySpeed = 0;
-        scale = 20;
-        total = 0;
-        gotLonger = false;
-        
-        ofVec2f vec(0, 0);
-        tail.push_back(vec);
-    }
-    
+
+
+	Snake() {
+		scale = 20;
+
+		setStartLocation();
+
+		xSpeed = 1;
+		ySpeed = 0;
+		
+		total = 0;
+		gotLonger = false;
+	}
+
+	void setStartLocation() {
+		int cols = floor(ofGetWidth() / scale);
+		int rows = floor(ofGetHeight() / scale);
+
+
+		x = int(ofRandom(cols)) * scale;
+		y = int(ofRandom(rows)) * scale;
+	}
+
+	void setCurrentKey(int key) {
+		currentKey = key;
+	}
+
+	int getCurrentKey() {
+		return currentKey % 2;
+	}
+
     void direction(int x, int y){
         xSpeed = x;
         ySpeed = y;
@@ -48,36 +65,28 @@ public:
     void getLonger(){
         total += 1;
         gotLonger = true;
-		cout << "GOT LONGER!!! " << total << endl;
+		ofVec2f vec(x, y);
+		tail.push_back(vec);
     }
-    
-    void update() {
-        for(int i = 0; i < total-1; i++){
-            tail[i] = tail[i + 1];
-        }
-        
-        ofVec2f vec(x, y);
-		if (total > 0) {
-			if (gotLonger) {
-				//tail.pop_back();
-				tail.push_back(vec);
-				cout << "got longer  " << vec << "  " << tail.size() << endl;
-				cout << "got longer last index " << tail[tail.size() - 1] << "  " << endl;
-				gotLonger = false;
-			}
-			tail[total - 1] = vec;
-			cout << "added last index  " << tail[total - 1] << endl;
-		}
-		for (int i = 0; i <= total; i++) {
-			cout << "from update  " << total << "  " << i << "  " << tail[i].x << "  " << tail[i].y << endl;
-			//tail[i] = tail[i + 1];
-		}
 
-		cout << endl;
+    
+	void update() {
+		if (tail.size() > 0) {
+			for (int i = 0; i < total - 1; i++) {
+				tail[i] = tail[i + 1];
+			}
+
+			ofVec2f vec(x, y);
+			if (total > 0 && !gotLonger) {
+				tail[total - 1] = vec;
+				
+			}
+			gotLonger = false;
+		}	
             
         x += xSpeed * scale;
         y += ySpeed * scale;
-        
+		cout << x << "  " << y << endl;
         x = ofClamp(x, 0, width-scale);
         y = ofClamp(y, 0, height-scale);
     }
@@ -87,10 +96,27 @@ public:
         for(int i = 0; i < total; i++){
             ofDrawRectangle(tail[i].x, tail[i].y, scale, scale);
         }
-        
         ofDrawRectangle(x, y, scale, scale);
+
     }
-    
+
+	void die() {
+		if (tail.size() > 1) {
+			for (int i = 0; i < tail.size(); i++) {
+				float distance = ofDist(x, y, tail[i].x, tail[i].y);
+				if (distance < 1 || x < 0 || y < 0 || x > width || y > height) {
+					resetGame();
+				}
+			}
+		}
+	}
+ 
+	void resetGame() {
+		setStartLocation();
+		total = 0;
+		tail.clear();
+	}
+
     bool eat(Food food){
         float distance = ofDist(x, y, food.getX(), food.getY());
         
