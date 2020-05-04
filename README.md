@@ -1,2 +1,2 @@
 # of_snake
-## recreattion of snake game in openFramworks
+## recreation of snake game in openFramworks
